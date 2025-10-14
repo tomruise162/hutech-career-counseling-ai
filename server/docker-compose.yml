@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ../backend
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DATABASE_URL=sqlite:///./hutech_consultation.db
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    expose:
+      - "8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../frontend/hutech-consultation
+      dockerfile: Dockerfile
+    environment:
+      # Keep code unchanged; Nginx will rewrite API base via sub_filter
+      - NODE_OPTIONS=--openssl-legacy-provider
+    command: sh -c "npm ci && npm run build && npx serve -s build -l 3000"
+    expose:
+      - "3000"
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
+    restart: unless-stopped
+
+
