@@ -179,7 +179,7 @@ const ChatInterface = ({ studentInfo, onBack }) => {
           </button>
         </div>
         <div className="chat-title">
-          <h3>💬 Tư vấn với HuGo AI</h3>
+          <h3>Tư vấn với HuGo AI</h3>
           <p>Học sinh: {studentInfo.student_name} - Lớp {studentInfo.grade}</p>
         </div>
         <div className="header-right">
@@ -273,7 +273,7 @@ const ChatInterface = ({ studentInfo, onBack }) => {
       ) : (
         <div className="session-ended">
           <div className="ended-message">
-            <h3>✅ Buổi tư vấn đã kết thúc</h3>
+            <h3>Buổi tư vấn đã kết thúc</h3>
             <p>Cảm ơn bạn đã tham gia tư vấn hướng nghiệp với HuGo!</p>
             <button className="back-btn" onClick={onBack}>
               ← Quay lại trang chủ
