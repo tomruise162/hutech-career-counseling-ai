@@ -1,0 +1,310 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 40px 0;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.app-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.app-header p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.app-main {
+  flex: 1;
+  padding: 40px 0;
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.consultation-section {
+  min-height: 600px;
+}
+
+.consultation-form {
+  margin-top: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.response-section {
+  margin-top: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.response-content {
+  margin-top: 15px;
+}
+
+.response-content p {
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.suggested-majors {
+  margin: 20px 0;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.suggested-majors h4 {
+  color: #667eea;
+  margin-bottom: 10px;
+}
+
+.suggested-majors ul {
+  list-style: none;
+  padding: 0;
+}
+
+.suggested-majors li {
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.suggested-majors li:last-child {
+  border-bottom: none;
+}
+
+.suggested-majors li:before {
+  content: "🎯 ";
+  margin-right: 8px;
+}
+
+.additional-info {
+  margin: 20px 0;
+  padding: 15px;
+  background: #e3f2fd;
+  border-radius: 8px;
+  border: 1px solid #bbdefb;
+}
+
+.additional-info h4 {
+  color: #1976d2;
+  margin-bottom: 10px;
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admission-table {
+  overflow-x: auto;
+  margin-top: 15px;
+}
+
+.admission-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.admission-table th,
+.admission-table td {
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.admission-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+.admission-table tr:hover {
+  background: #f8f9fa;
+}
+
+.majors-grid {
+  display: grid;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.major-card {
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.major-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.major-card h4 {
+  color: #667eea;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.major-code {
+  font-size: 12px;
+  color: #6c757d;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.major-description {
+  font-size: 14px;
+  color: #495057;
+  line-height: 1.4;
+}
+
+.app-footer {
+  background: #343a40;
+  color: white;
+  padding: 30px 0;
+  text-align: center;
+  margin-top: auto;
+}
+
+.app-footer p {
+  margin: 5px 0;
+  opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .info-section {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header h1 {
+    font-size: 2rem;
+  }
+  
+  .app-header p {
+    font-size: 1rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .admission-table {
+    font-size: 12px;
+  }
+  
+  .admission-table th,
+  .admission-table td {
+    padding: 8px 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    padding: 30px 0;
+  }
+  
+  .app-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .app-main {
+    padding: 20px 0;
+  }
+  
+  .card {
+    padding: 15px;
+  }
+}
+
+/* Step Indicator */
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.step {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.step.active {
+  background: rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Start Over Button */
+.start-over-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.start-over-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive for new components */
+@media (max-width: 768px) {
+  .step-indicator {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "ai_model": {
+    "model": "gpt-3.5-turbo",
+    "max_tokens": 1000,
+    "temperature": 0.7,
+    "top_p": 1.0,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0
+  },
+  "prompt_templates": {
+    "system_base": "Tên của bạn là HuNext, một chuyên viên tư vấn hướng nghiệp thân thiện, tận tâm và chuyên nghiệp.",
+    "greeting": "Chào bạn 👋 Mình là HuNext, hôm nay mình sẽ giúp bạn khám phá tính cách nghề nghiệp của bản thân để tìm ra những ngành học và nghề phù hợp nhé 🌱.",
+    "closing": "Cảm ơn bạn đã tham gia buổi tư vấn! Nếu bạn còn thắc mắc gì khác về các ngành học tại HUTECH, đừng ngần ngại liên hệ với chúng tôi qua hotline 028 5445 7777 hoặc email tuyensinh@hutech.edu.vn. Chúc bạn thành công! 🎉",
+    "fallback": "Tôi hiểu câu hỏi của bạn. Để được tư vấn chính xác nhất, bạn có thể liên hệ trực tiếp với phòng Tuyển sinh HUTECH qua hotline 028 5445 7777."
+  },
+  "response_guidelines": {
+    "max_length": 1000,
+    "include_contact_info": true,
+    "include_encouragement": true,
+    "professional_tone": false,
+    "friendly_tone": true,
+    "use_emojis": true,
+    "vietnamese_only": true
+  },
+  "contact_info": {
+    "hotline": "028 5445 7777",
+    "email": "tuyensinh@hutech.edu.vn",
+    "website": "https://hutech.edu.vn",
+    "address": "475A Điện Biên Phủ, P.25, Q.Bình Thạnh, TP.HCM"
+  },
+  "riasec_types": {
+    "R": {
+      "name": "Thực tế (Realistic)",
+      "description": "thích thao tác kỹ thuật, máy móc, hoạt động ngoài trời",
+      "majors": ["Cơ khí", "Kỹ thuật ô tô", "Xây dựng", "Điện – điện tử", "Cơ khí chế tạo", "Kỹ thuật môi trường"],
+      "keywords": ["kỹ thuật", "máy móc", "thực hành", "lắp ráp", "sửa chữa", "chế tạo", "ngoài trời"]
+    },
+    "I": {
+      "name": "Nghiên cứu (Investigative)",
+      "description": "thích phân tích, tìm hiểu, khám phá",
+      "majors": ["Công nghệ thông tin", "Công nghệ sinh học", "Kỹ thuật phần mềm", "Khoa học máy tính", "Toán ứng dụng", "Vật lý kỹ thuật"],
+      "keywords": ["nghiên cứu", "phân tích", "tìm hiểu", "khám phá", "logic", "toán học", "khoa học"]
+    },
+    "A": {
+      "name": "Nghệ thuật (Artistic)",
+      "description": "thích sáng tạo, tự do, nghệ thuật",
+      "majors": ["Thiết kế đồ họa", "Truyền thông đa phương tiện", "Thiết kế nội thất", "Kiến trúc", "Thiết kế thời trang", "Quảng cáo"],
+      "keywords": ["sáng tạo", "nghệ thuật", "thiết kế", "vẽ", "viết", "biểu diễn", "tự do"]
+    },
+    "S": {
+      "name": "Xã hội (Social)",
+      "description": "thích giúp đỡ, tương tác, chăm sóc người khác",
+      "majors": ["Tâm lý học", "Công tác xã hội", "Điều dưỡng", "Giáo dục mầm non", "Quản lý nhân sự", "Du lịch"],
+      "keywords": ["giúp đỡ", "tương tác", "chăm sóc", "tư vấn", "hướng dẫn", "giao tiếp", "cộng đồng"]
+    },
+    "E": {
+      "name": "Quản lý (Enterprising)",
+      "description": "thích lãnh đạo, thuyết phục, kinh doanh",
+      "majors": ["Quản trị kinh doanh", "Marketing", "Quan hệ công chúng", "Thương mại điện tử", "Kinh doanh quốc tế", "Quản lý dự án"],
+      "keywords": ["lãnh đạo", "thuyết phục", "kinh doanh", "quản lý", "bán hàng", "đưa ra quyết định"]
+    },
+    "C": {
+      "name": "Quy tắc (Conventional)",
+      "description": "thích công việc ổn định, quy trình rõ ràng",
+      "majors": ["Kế toán", "Tài chính – ngân hàng", "Quản trị văn phòng", "Luật kinh tế", "Quản lý tài chính", "Thống kê"],
+      "keywords": ["ổn định", "quy trình", "quy củ", "chi tiết", "tổ chức", "quản lý hồ sơ", "văn phòng"]
+    }
+  },
+  "consultation_phases": {
+    "opening": {
+      "keywords": ["chào", "bắt đầu", "giới thiệu", "mục tiêu", "định hướng"],
+      "priority": 1,
+      "description": "Mở đầu và giới thiệu"
+    },
+    "interest_exploration": {
+      "keywords": ["sở thích", "thời gian rảnh", "hoạt động", "môn học", "câu lạc bộ"],
+      "priority": 2,
+      "description": "Khám phá sở thích & hành vi"
+    },
+    "personal_ability": {
+      "keywords": ["kỹ năng", "điểm mạnh", "giỏi", "học nhanh", "tự tin"],
+      "priority": 3,
+      "description": "Khám phá năng lực cá nhân"
+    },
+    "career_values": {
+      "keywords": ["công việc lý tưởng", "quan trọng", "môi trường", "tương lai", "giá trị"],
+      "priority": 4,
+      "description": "Khám phá giá trị nghề nghiệp"
+    },
+    "riasec_assessment": {
+      "keywords": ["kỹ thuật", "nghiên cứu", "nghệ thuật", "xã hội", "quản lý", "quy tắc"],
+      "priority": 5,
+      "description": "Đánh giá nhóm Holland (RIASEC)"
+    },
+    "career_guidance": {
+      "keywords": ["ngành học", "nghề nghiệp", "gợi ý", "phù hợp", "hướng đi"],
+      "priority": 6,
+      "description": "Gợi ý hướng đi nghề nghiệp"
+    },
+    "closing": {
+      "keywords": ["kết thúc", "tóm tắt", "tư vấn chi tiết", "thông tin thêm"],
+      "priority": 7,
+      "description": "Kết thúc buổi tư vấn"
+    }
+  },
+  "validation_rules": {
+    "min_question_length": 5,
+    "max_question_length": 500,
+    "required_fields": ["question"],
+    "optional_fields": ["student_name", "student_phone", "student_email", "current_phase", "riasec_type", "student_responses"]
+  },
+  "logging": {
+    "log_prompts": true,
+    "log_responses": true,
+    "log_classification": true,
+    "log_errors": true,
+    "log_riasec_analysis": true
+  }
+}
