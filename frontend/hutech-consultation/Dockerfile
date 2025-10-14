@@ -1,18 +1,8 @@
 FROM node:18-alpine
-
 WORKDIR /app
-
-# Copy package files
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
-
-# Copy source code
 COPY . .
-
-# Expose port
+RUN npm run build && npm install -g serve
 EXPOSE 3000
-
-# Start the application
-CMD ["npm", "start"]
+CMD ["serve","-s","build","-l","3000"]
