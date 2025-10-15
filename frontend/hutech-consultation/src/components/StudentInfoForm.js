@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './StudentInfoForm.css';
 
-const API_BASE_URL = 'http://localhost:8000';
+//const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = '/api';
 
 const StudentInfoForm = ({ onNext, onStudentInfoSaved }) => {
   const [formData, setFormData] = useState({

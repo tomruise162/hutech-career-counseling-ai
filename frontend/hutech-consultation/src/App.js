@@ -4,7 +4,8 @@ import StudentInfoForm from './components/StudentInfoForm';
 import ChatInterface from './components/ChatInterface';
 import './App.css';
 
-const API_BASE_URL = 'http://localhost:8000';
+//const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = '/api';
 
 function App() {
   const [currentStep, setCurrentStep] = useState(1); // 1: Student Info, 2: Chat with AI
