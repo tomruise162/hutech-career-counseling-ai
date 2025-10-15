@@ -2,318 +2,241 @@
 
 ## Overview
 
-This is a local demo of HUTECH's career counseling system with **HuGo AI** - an intelligent career counselor using John L. Holland's RIASEC model for personality-based career guidance.
+This is a career counseling system for HUTECH University featuring HuGo AI - an intelligent career counselor that uses John L. Holland's RIASEC model to provide personalized career guidance and major recommendations.
 
 ## Key Features
 
 ### HuGo AI Career Counseling
-- Career counseling based on RIASEC model
-- Personality discovery and career interests
+- Career counseling based on RIASEC personality model
+- Interactive personality discovery and assessment
 - Automatic personality type classification
-- Major suggestions suitable for HUTECH
-- Interactive chat interface with restart functionality
+- Personalized major suggestions for HUTECH programs
+- Chat interface with session management and restart functionality
 
-### RIASEC Model
-- **R - Realistic**: Technical, mechanical, hands-on
-- **I - Investigative**: Analysis, research, exploration  
-- **A - Artistic**: Creative, design, arts
-- **S - Social**: Helping, interaction, care
-- **E - Enterprising**: Leadership, persuasion, business
-- **C - Conventional**: Stability, procedures, organization
+### RIASEC Model Implementation
+- **R - Realistic**: Technical, mechanical, hands-on careers
+- **I - Investigative**: Analysis, research, exploration careers
+- **A - Artistic**: Creative, design, arts careers
+- **S - Social**: Helping, interaction, care careers
+- **E - Enterprising**: Leadership, persuasion, business careers
+- **C - Conventional**: Stability, procedures, organization careers
 
 ### 7-Step Counseling Process
-1. **Opening**: Introduce HuGo, create comfortable atmosphere
+1. **Opening**: Introduction and atmosphere setting
 2. **Interest exploration**: Initial RIASEC group identification
-3. **Personal abilities**: Understand strengths and learning style
-4. **Career values**: What's important in work
-5. **RIASEC assessment**: Confirm specific personality type
-6. **Career guidance**: Suitable majors at HUTECH
+3. **Personal abilities**: Understanding strengths and learning style
+4. **Career values**: Identifying work priorities
+5. **RIASEC assessment**: Confirming specific personality type
+6. **Career guidance**: Recommending suitable HUTECH majors
 7. **Closing**: Summary and encouragement
 
-## Installation & Setup
+## System Requirements
 
-### System Requirements
-- **Python 3.8+**
-- **Node.js 16+**
-- **Docker & Docker Compose** (optional)
-- **OpenAI API Key**
+- Python 3.8 or higher
+- Node.js 16 or higher
+- Docker and Docker Compose (for containerized deployment)
+- OpenAI API Key
+- Modern web browser
 
-### Quick Start
+## Installation and Setup
 
-**Windows - Auto Start (Recommended):**
-```cmd
-# 1. Configure API key
-copy env.example .env
-# Edit .env and add OPENAI_API_KEY=sk-your-key-here
+### Local Development Setup
 
-# 2. Run auto-start script for both backend and frontend
-start-all.bat
+1. **Clone the repository**
+```bash
+git clone <repository-url>
+cd hutech-career-counseling-ai
 ```
 
-**Manual Setup:**
-```powershell
-# 1. Configure API key
-copy env.example .env
-# Edit .env and add OPENAI_API_KEY=sk-your-key-here
+2. **Configure environment variables**
+```bash
+# Copy environment template
+cp env.example .env
 
-# 2. Initialize database
+# Edit .env file and add your OpenAI API key
+# OPENAI_API_KEY=sk-your-actual-api-key-here
+```
+
+3. **Install backend dependencies**
+```bash
 cd backend
+pip install -r requirements.txt
 python init_data.py
 cd ..
+```
 
-# 3. Start backend (terminal 1)
+4. **Install frontend dependencies**
+```bash
+cd frontend/hutech-consultation
+npm install
+cd ../..
+```
+
+### Running the Application
+
+#### Option 1: Manual Start
+```bash
+# Start backend server
 cd backend
 python main.py
 
-# 4. Start frontend (terminal 2)
+# In another terminal, start frontend
 cd frontend/hutech-consultation
 npm start
 ```
 
-**Access:**
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
+#### Option 2: Docker Compose
+```bash
+# Start all services
+docker-compose up -d
 
-### Docker Mode (Optional)
-
-**Windows PowerShell:**
-```powershell
-# 1. Configure API key
-copy env.example .env
-# Edit .env and add OPENAI_API_KEY=sk-your-key-here
-
-# 2. Run Docker deployment
-.\deploy.ps1
+# View logs
+docker-compose logs -f
 ```
 
-**Access:**
-- Frontend: http://localhost:3001
-- Backend API: http://localhost:8001
-- API Docs: http://localhost:8001/docs
-- Nginx Proxy: http://localhost:8080
-
-## Project Structure
-
+#### Option 3: Windows Auto Start
+```cmd
+# Run the automated setup script
+start-all.bat
 ```
-Demo_local/
-├── backend/                    # FastAPI server with HuGo AI
-│   ├── main.py                # API endpoints
-│   ├── prompts.py             # RIASEC prompts and logic
-│   ├── init_data.py           # Initialize sample data
-│   ├── hutech_consultation.db # SQLite database
-│   └── requirements.txt       # Python dependencies
-├── frontend/                   # React app
-│   └── hutech-consultation/
-│       ├── src/
-│       │   ├── App.js         # Main React component
-│       │   └── components/    # React components
-│       │       ├── ChatInterface.js    # Chat with HuGo AI
-│       │       └── StudentInfoForm.js  # Student information form
-│       └── package.json       # Node.js dependencies
-├── start-all.bat              # Auto-start script
-├── export_sqlite_to_csv.py    # Data export utility
-├── check_data.ipynb           # Data analysis notebook
-└── README.md                  # This file
-```
+
+## Access Points
+
+- **Frontend Application**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API Documentation**: http://localhost:8000/docs
+- **Admin Interface**: http://localhost:8000/admin
 
 ## API Endpoints
 
 ### Student Information
-```http
-POST /student-info
-Content-Type: application/json
-
-{
-  "student_name": "John Doe",
-  "student_phone": "0123456789",
-  "student_email": "john@example.com",
-  "school_name": "High School ABC",
-  "grade": "12"
-}
-```
+- `POST /student-info` - Save student information
+- `GET /student-info/{student_id}` - Retrieve student information
 
 ### Career Counseling
-```http
-POST /consultation
-Content-Type: application/json
+- `POST /consultation` - Start or continue counseling session
+- `GET /consultation-sessions/{session_id}` - Get session details
+- `POST /consultation-sessions/{session_id}/end` - End counseling session
 
-{
-  "student_name": "John Doe",
-  "student_phone": "0123456789",
-  "student_email": "john@example.com",
-  "school_name": "High School ABC",
-  "grade": "12",
-  "question": "I want to explore my career personality",
-  "score_range": "",
-  "session_id": null,
-  "history": []
-}
-```
-
-### Session Management
-```http
-POST /consultation-sessions/{session_id}/end
-```
-
-### Available Majors
-```http
-GET /majors
-```
-
-### Admission Information
-```http
-GET /admission-info/2024
-```
+### Academic Information
+- `GET /majors` - Get all available majors
+- `GET /admission-info/{year}` - Get admission information for specific year
 
 ## Database Schema
 
-### consultation_sessions
-- id (INTEGER PRIMARY KEY)
-- student_name (TEXT)
-- student_phone (TEXT)
-- student_email (TEXT)
-- school_name (TEXT)
-- grade (TEXT)
-- score_range (TEXT)
-- riasec_result (TEXT)
-- suggested_majors (TEXT)
-- status (TEXT)
-- created_at (TIMESTAMP)
-- ended_at (TIMESTAMP)
+The system uses SQLite database with the following main tables:
+- `students` - Student information
+- `consultation_sessions` - Counseling session data
+- `majors` - Available academic programs
+- `admission_info` - Admission requirements and statistics
 
-### consultation_messages
-- id (INTEGER PRIMARY KEY)
-- session_id (INTEGER)
-- role (TEXT) - 'user' or 'assistant'
-- content (TEXT)
-- timestamp (TIMESTAMP)
+## Configuration
 
-## Data Export
+### Environment Variables
 
-Use the provided Python script to export data to CSV:
+- `OPENAI_API_KEY` - Your OpenAI API key (required)
+- `DATABASE_URL` - Database connection string
+- `HOST` - Server host (default: 0.0.0.0)
+- `PORT` - Server port (default: 8000)
+- `ALLOWED_ORIGINS` - CORS allowed origins
+- `DEMO_MODE` - Enable demo mode (default: true)
+- `DEBUG` - Enable debug mode (default: true)
 
+### Customization
+
+You can customize the counseling prompts and responses by editing:
+- `backend/prompts.py` - Main counseling prompts
+- `backend/prompt_config.json` - Prompt configuration
+- `frontend/src/components/` - UI components
+
+## Deployment
+
+### Production Deployment
+
+1. **Server Requirements**
+   - Ubuntu 20.04+ or CentOS 8+
+   - Minimum 2GB RAM (recommended 4GB+)
+   - 10GB+ free storage
+   - Docker and Docker Compose installed
+
+2. **Deployment Steps**
 ```bash
-python export_sqlite_to_csv.py
+# Clone repository
+git clone <repository-url>
+cd hutech-career-counseling-ai
+
+# Configure environment
+cp env.example .env
+# Edit .env with production settings
+
+# Deploy with Docker Compose
+cd server
+docker-compose up -d
 ```
 
-This creates 4 CSV files:
-- consultation_sessions_export.csv - Session information
-- consultation_messages_export.csv - All chat messages
-- consultation_combined_export.csv - Sessions with message statistics
-- consultation_detailed_messages_export.csv - Messages with student info
-
-## Features
-
-### Chat Interface
-- Real-time chat with HuGo AI
-- Restart chat functionality (reload button)
-- Mobile-responsive design
-- Session management
-- Message history tracking
-
-### Student Information Form
-- Input validation
-- Mobile-friendly interface
-- Data persistence
-
-### Backend Features
-- FastAPI with automatic API documentation
-- SQLite database with session management
-- OpenAI GPT integration
-- CORS support for frontend
-- Error handling and logging
-
-## Testing
-
-### Manual Testing
-```bash
-# Test student info endpoint
-curl -X POST "http://localhost:8000/student-info" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "student_name": "John Doe",
-    "student_phone": "0123456789",
-    "student_email": "john@example.com",
-    "school_name": "High School ABC",
-    "grade": "12"
-  }'
-
-# Test consultation endpoint
-curl -X POST "http://localhost:8000/consultation" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "student_name": "John Doe",
-    "student_phone": "0123456789",
-    "student_email": "john@example.com",
-    "school_name": "High School ABC",
-    "grade": "12",
-    "question": "I want to explore my career personality"
-  }'
-```
+3. **Access Points**
+   - Application: http://your-server-ip
+   - API: http://your-server-ip/api
+   - Documentation: http://your-server-ip/api/docs
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Invalid OpenAI API Key**
-   ```bash
-   # Check key in .env file
-   type .env
-   ```
+1. **API Connection Errors**
+   - Verify OpenAI API key is correct
+   - Check network connectivity
+   - Ensure backend server is running
 
-2. **Port conflicts**
-   ```bash
-   # Check ports in use
-   netstat -an | findstr :3000
-   netstat -an | findstr :8000
-   ```
+2. **Database Issues**
+   - Check database file permissions
+   - Verify SQLite installation
+   - Run database initialization script
 
-3. **Python dependencies**
-   ```bash
-   # Reinstall dependencies
-   cd backend
-   pip install -r requirements.txt --force-reinstall
-   ```
+3. **Frontend Build Errors**
+   - Clear node_modules and reinstall
+   - Check Node.js version compatibility
+   - Verify all dependencies are installed
 
-4. **Node.js dependencies**
-   ```bash
-   # Reinstall dependencies
-   cd frontend/hutech-consultation
-   rmdir /s node_modules
-   del package-lock.json
-   npm install
-   ```
-
-5. **Database issues**
-   ```bash
-   # Reinitialize database
-   cd backend
-   del hutech_consultation.db
-   python init_data.py
-   ```
-
-## Environment Configuration
-
-Create a `.env` file from the template:
+### Logs and Debugging
 
 ```bash
-copy env.example .env
+# View application logs
+docker-compose logs -f
+
+# View specific service logs
+docker-compose logs -f backend
+docker-compose logs -f frontend
+
+# Check database
+sqlite3 hutech_consultation.db ".tables"
 ```
 
-Required environment variables:
-- OPENAI_API_KEY: Your OpenAI API key
-- DATABASE_URL: SQLite database path
-- HOST: Server host (default: 0.0.0.0)
-- PORT: Server port (default: 8000)
-- DEBUG: Debug mode (default: true)
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
 
 ## Support
 
-- **Email**: tuyensinh@hutech.edu.vn
-- **Hotline**: 028 5445 7777
-- **Website**: https://hutech.edu.vn
+For technical support or questions:
+- Email: tuyensinh@hutech.edu.vn
+- Phone: 028 5445 7777
+- Documentation: See docs/ folder for detailed guides
 
----
+## Changelog
 
-**HuGo AI - Discover your potential, shape your future!**
+### Version 1.0.0
+- Initial release with HuGo AI counseling system
+- RIASEC model implementation
+- Interactive chat interface
+- Major recommendation system
+- Session management
+- Docker deployment support

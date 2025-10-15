@@ -1,22 +1,24 @@
-# 🚀 Hướng Dẫn Deploy HUTECH Tư Vấn Tuyển Sinh
+# HUTECH Career Counseling System - Deployment Guide
 
-## 📋 Yêu cầu hệ thống
+## System Requirements
 
 ### Server Requirements
-- **OS**: Ubuntu 20.04+ hoặc CentOS 8+
-- **RAM**: Tối thiểu 2GB (khuyến nghị 4GB+)
-- **Storage**: Tối thiểu 10GB free space
-- **Network**: Kết nối internet ổn định
+- **Operating System**: Ubuntu 20.04+ or CentOS 8+
+- **RAM**: Minimum 2GB (recommended 4GB+)
+- **Storage**: Minimum 10GB free space
+- **Network**: Stable internet connection
+- **CPU**: 2+ cores recommended
 
 ### Software Requirements
-- **Docker**: 20.10+
-- **Docker Compose**: 2.0+
-- **Git**: Để clone source code
-- **OpenAI API Key**: Để sử dụng ChatGPT
+- **Docker**: Version 20.10 or higher
+- **Docker Compose**: Version 2.0 or higher
+- **Git**: For cloning source code
+- **OpenAI API Key**: For AI functionality
 
-## 🔧 Cài đặt môi trường
+## Environment Setup
 
-### 1. Cập nhật hệ thống
+### 1. System Update
+
 ```bash
 # Ubuntu/Debian
 sudo apt update && sudo apt upgrade -y
@@ -25,7 +27,8 @@ sudo apt update && sudo apt upgrade -y
 sudo yum update -y
 ```
 
-### 2. Cài đặt Docker
+### 2. Docker Installation
+
 ```bash
 # Ubuntu/Debian
 curl -fsSL https://get.docker.com -o get-docker.sh
@@ -39,37 +42,41 @@ sudo systemctl enable docker
 sudo usermod -aG docker $USER
 ```
 
-### 3. Cài đặt Docker Compose
+### 3. Docker Compose Installation
+
 ```bash
 sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
-### 4. Logout và login lại
+### 4. Apply Group Permissions
+
 ```bash
-# Để áp dụng group permissions
+# Logout and login again to apply docker group permissions
 exit
-# Login lại
+# Login again
 ```
 
-## 📥 Deploy ứng dụng
+## Application Deployment
 
-### 1. Clone source code
+### 1. Clone Source Code
+
 ```bash
 git clone <repository-url>
-cd Hutech_project
+cd hutech-career-counseling-ai
 ```
 
-### 2. Cấu hình environment
-```bash
-# Copy file environment mẫu
-cp backend/env_example.txt .env
+### 2. Environment Configuration
 
-# Chỉnh sửa file .env
+```bash
+# Copy environment template
+cp env.example .env
+
+# Edit environment file
 nano .env
 ```
 
-Cập nhật các thông tin sau:
+Update the following information:
 ```env
 # OpenAI API Configuration
 OPENAI_API_KEY=sk-your-actual-openai-api-key-here
@@ -82,378 +89,393 @@ HOST=0.0.0.0
 PORT=8000
 
 # CORS Configuration
-ALLOWED_ORIGINS=http://yourdomain.com,https://yourdomain.com
+ALLOWED_ORIGINS=http://yourdomain.com,https://yourdomain.com,http://your-server-ip
+
+# Production Configuration
+DEMO_MODE=false
+DEBUG=false
 ```
 
-### 3. Deploy với script tự động
-```bash
-# Cấp quyền thực thi
-chmod +x deploy.sh
+### 3. Server Deployment
 
-# Chạy deploy
-./deploy.sh
+```bash
+# Navigate to server directory
+cd server
+
+# Create database directory
+mkdir -p database
+
+# Create .env file for server
+cat > .env << 'EOF'
+OPENAI_API_KEY=sk-your-actual-openai-api-key-here
+DATABASE_URL=sqlite:///./hutech_consultation.db
+HOST=0.0.0.0
+PORT=8000
+ALLOWED_ORIGINS=http://your-server-ip:80,http://your-server-ip,http://localhost:3000
+DEMO_MODE=false
+DEBUG=false
+EOF
+
+# Deploy application stack
+docker compose up -d --build
 ```
 
-### 4. Deploy thủ công (nếu cần)
+### 4. Manual Deployment (Alternative)
+
 ```bash
-# Tạo thư mục cần thiết
+# Create necessary directories
 mkdir -p database ssl
 
-# Build và start containers
-docker-compose down
-docker-compose build --no-cache
-docker-compose up -d
+# Set proper permissions
+chmod 755 database
+chmod 700 ssl
 
-# Khởi tạo dữ liệu mẫu
-sleep 10
-docker-compose exec backend python init_data.py
+# Start services
+docker compose up -d
+
+# Check service status
+docker compose ps
 ```
 
-## 🌐 Cấu hình Domain & SSL
+## Verification and Testing
 
-### 1. Cài đặt Nginx (nếu không dùng Docker)
-```bash
-sudo apt install nginx -y
-sudo systemctl start nginx
-sudo systemctl enable nginx
-```
-
-### 2. Cấu hình domain
-```bash
-# Tạo file cấu hình Nginx
-sudo nano /etc/nginx/sites-available/hutech-consultation
-```
-
-```nginx
-server {
-    listen 80;
-    server_name yourdomain.com www.yourdomain.com;
-
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    location /api/ {
-        rewrite ^/api/(.*) /$1 break;
-        proxy_pass http://localhost:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
+### 1. Check Service Status
 
 ```bash
-# Enable site
-sudo ln -s /etc/nginx/sites-available/hutech-consultation /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl reload nginx
+# View running containers
+docker compose ps
+
+# Check logs
+docker compose logs -f
+
+# Test API endpoint
+curl http://localhost/api/majors
 ```
 
-### 3. Cài đặt SSL với Let's Encrypt
+### 2. Access Points
+
+- **Frontend Application**: http://your-server-ip
+- **Backend API**: http://your-server-ip/api
+- **API Documentation**: http://your-server-ip/api/docs
+
+### 3. Health Checks
+
 ```bash
-# Cài đặt Certbot
-sudo apt install certbot python3-certbot-nginx -y
+# Test frontend
+curl -I http://your-server-ip
 
-# Tạo SSL certificate
-sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+# Test API
+curl http://your-server-ip/api/majors
 
-# Test auto-renewal
-sudo certbot renew --dry-run
+# Test database
+docker compose exec backend python -c "import sqlite3; print('Database OK')"
 ```
 
-## 🔒 Cấu hình Firewall
+## Configuration Management
 
-### Ubuntu/Debian (UFW)
+### Environment Variables
+
+Key environment variables for production:
+
+```env
+# Required
+OPENAI_API_KEY=sk-your-openai-api-key
+
+# Database
+DATABASE_URL=sqlite:///./hutech_consultation.db
+
+# Server
+HOST=0.0.0.0
+PORT=8000
+
+# CORS (Production)
+ALLOWED_ORIGINS=http://yourdomain.com,https://yourdomain.com
+
+# Production Settings
+DEMO_MODE=false
+DEBUG=false
+```
+
+### Nginx Configuration
+
+The nginx.conf handles:
+- Static file serving
+- API request proxying
+- URL rewriting
+- CORS headers
+
+### Database Configuration
+
+- SQLite database for simplicity
+- Persistent storage via Docker volumes
+- Automatic backup recommendations
+
+## Security Configuration
+
+### 1. Firewall Setup
+
 ```bash
-# Enable UFW
+# Ubuntu/Debian
+sudo ufw allow 22    # SSH
+sudo ufw allow 80    # HTTP
+sudo ufw allow 443   # HTTPS (if using SSL)
 sudo ufw enable
 
-# Allow SSH
-sudo ufw allow 22
-
-# Allow HTTP/HTTPS
-sudo ufw allow 80
-sudo ufw allow 443
-
-# Check status
-sudo ufw status
-```
-
-### CentOS/RHEL (Firewalld)
-```bash
-# Start firewalld
-sudo systemctl start firewalld
-sudo systemctl enable firewalld
-
-# Allow services
-sudo firewall-cmd --permanent --add-service=ssh
-sudo firewall-cmd --permanent --add-service=http
-sudo firewall-cmd --permanent --add-service=https
-
-# Reload
+# CentOS/RHEL
+sudo firewall-cmd --permanent --add-port=22/tcp
+sudo firewall-cmd --permanent --add-port=80/tcp
+sudo firewall-cmd --permanent --add-port=443/tcp
 sudo firewall-cmd --reload
 ```
 
-## 📊 Monitoring & Maintenance
-
-### 1. Systemd Service
-```bash
-# Tạo systemd service
-sudo nano /etc/systemd/system/hutech-consultation.service
-```
-
-```ini
-[Unit]
-Description=HUTECH Consultation System
-Requires=docker.service
-After=docker.service
-
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-WorkingDirectory=/path/to/Hutech_project
-ExecStart=/usr/local/bin/docker-compose up -d
-ExecStop=/usr/local/bin/docker-compose down
-TimeoutStartSec=0
-
-[Install]
-WantedBy=multi-user.target
-```
+### 2. SSL/TLS Configuration (Optional)
 
 ```bash
-# Enable service
-sudo systemctl enable hutech-consultation.service
-sudo systemctl start hutech-consultation.service
+# Generate SSL certificate (Let's Encrypt)
+sudo apt install certbot
+sudo certbot certonly --standalone -d yourdomain.com
+
+# Update nginx.conf for HTTPS
+# Add SSL configuration to nginx.conf
 ```
 
-### 2. Log rotation
-```bash
-# Tạo logrotate config
-sudo nano /etc/logrotate.d/hutech-consultation
-```
+### 3. API Key Security
 
-```
-/var/log/hutech-consultation/*.log {
-    daily
-    missingok
-    rotate 30
-    compress
-    delaycompress
-    notifempty
-    create 644 root root
-    postrotate
-        docker-compose restart
-    endscript
-}
-```
+- Store API keys in environment variables
+- Never commit API keys to version control
+- Use different keys for development and production
+- Regularly rotate API keys
 
-### 3. Backup script
-```bash
-# Tạo backup script
-nano backup.sh
-```
+## Monitoring and Maintenance
+
+### 1. Log Management
 
 ```bash
+# View application logs
+docker compose logs -f
+
+# View specific service logs
+docker compose logs -f backend
+docker compose logs -f frontend
+docker compose logs -f nginx
+
+# Log rotation (optional)
+sudo logrotate /etc/logrotate.d/docker
+```
+
+### 2. Database Backup
+
+```bash
+# Create backup script
+cat > backup.sh << 'EOF'
 #!/bin/bash
-BACKUP_DIR="/backup/hutech-consultation"
 DATE=$(date +%Y%m%d_%H%M%S)
-
+BACKUP_DIR="/opt/backups"
 mkdir -p $BACKUP_DIR
 
 # Backup database
-docker-compose exec -T backend cp hutech_consultation.db /app/database/backup_$DATE.db
+docker compose exec -T backend cp hutech_consultation.db /app/database/backup_$DATE.db
+cp database/backup_$DATE.db $BACKUP_DIR/
 
-# Backup source code
-tar -czf $BACKUP_DIR/source_$DATE.tar.gz /path/to/Hutech_project
-
-# Cleanup old backups (keep 30 days)
-find $BACKUP_DIR -name "*.tar.gz" -mtime +30 -delete
+# Clean old backups (keep 30 days)
 find $BACKUP_DIR -name "*.db" -mtime +30 -delete
 
-echo "Backup completed: $DATE"
-```
+echo "Backup completed: backup_$DATE.db"
+EOF
 
-```bash
-# Cấp quyền và thêm vào crontab
 chmod +x backup.sh
+
+# Schedule daily backups
 crontab -e
-
-# Thêm dòng sau để backup hàng ngày lúc 2:00 AM
-0 2 * * * /path/to/backup.sh
+# Add: 0 2 * * * /path/to/backup.sh
 ```
 
-## 🔧 Troubleshooting
+### 3. System Monitoring
 
-### 1. Kiểm tra trạng thái services
 ```bash
-# Docker containers
-docker-compose ps
+# Check resource usage
+docker stats
 
-# Systemd service
-sudo systemctl status hutech-consultation.service
+# Check disk space
+df -h
 
-# Nginx
-sudo systemctl status nginx
+# Check memory usage
+free -h
 
-# Logs
-docker-compose logs -f
+# Check system load
+uptime
 ```
 
-### 2. Lỗi thường gặp
+## Troubleshooting
 
-#### Container không start
+### Common Issues
+
+1. **Port Already in Use**
 ```bash
-# Xem logs chi tiết
-docker-compose logs backend
-docker-compose logs frontend
+# Check what's using port 80
+sudo netstat -tlnp | grep :80
+sudo lsof -i :80
+
+# Stop conflicting services
+sudo systemctl stop apache2
+sudo systemctl stop nginx
+```
+
+2. **Permission Issues**
+```bash
+# Fix ownership
+sudo chown -R $USER:$USER /opt/hutech-app
+chmod -R 755 /opt/hutech-app
+```
+
+3. **Container Won't Start**
+```bash
+# Check logs
+docker compose logs backend
+docker compose logs frontend
+
+# Check configuration
+docker compose config
 
 # Rebuild containers
-docker-compose down
-docker-compose build --no-cache
-docker-compose up -d
+docker compose down
+docker compose up -d --build
 ```
 
-#### Port conflicts
+4. **Database Issues**
 ```bash
-# Kiểm tra port đang sử dụng
-netstat -tulpn | grep :8000
-netstat -tulpn | grep :3000
-
-# Kill process sử dụng port
-sudo kill -9 $(lsof -t -i:8000)
-```
-
-#### Database issues
-```bash
-# Kiểm tra database file
-docker-compose exec backend ls -la *.db
+# Check database file
+ls -la database/
 
 # Recreate database
-docker-compose exec backend rm -f hutech_consultation.db
-docker-compose exec backend python init_data.py
+docker compose exec backend python init_data.py
+
+# Check database integrity
+docker compose exec backend python -c "import sqlite3; conn = sqlite3.connect('hutech_consultation.db'); print('Database OK')"
 ```
 
-#### SSL certificate issues
+5. **API Connection Errors**
 ```bash
-# Renew certificate
-sudo certbot renew
+# Check CORS configuration
+grep ALLOWED_ORIGINS .env
 
-# Test certificate
-sudo certbot certificates
+# Test API directly
+curl -v http://localhost:8000/majors
+
+# Check OpenAI API key
+docker compose exec backend python -c "import os; print('API Key:', os.getenv('OPENAI_API_KEY')[:10] + '...')"
 ```
 
-### 3. Performance optimization
+### Performance Optimization
 
-#### Nginx optimization
-```nginx
-# Thêm vào nginx.conf
-worker_processes auto;
-worker_connections 1024;
-
-http {
-    gzip on;
-    gzip_vary on;
-    gzip_min_length 1024;
-    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
-    
-    client_max_body_size 10M;
-    client_body_timeout 60s;
-    client_header_timeout 60s;
-}
-```
-
-#### Docker optimization
+1. **Resource Limits**
 ```yaml
-# Thêm vào docker-compose.yml
+# Add to docker-compose.yml
 services:
   backend:
     deploy:
       resources:
         limits:
           memory: 1G
-        reservations:
-          memory: 512M
+          cpus: '0.5'
 ```
 
-## 📈 Scaling
+2. **Database Optimization**
+- Consider PostgreSQL for high-traffic scenarios
+- Implement database connection pooling
+- Add database indexes for frequently queried fields
 
-### 1. Load balancing
-```nginx
-upstream backend {
-    server localhost:8000;
-    server localhost:8001;
-    server localhost:8002;
-}
+3. **Caching**
+- Configure Nginx caching for static files
+- Implement Redis for session caching
+- Add application-level caching
 
-upstream frontend {
-    server localhost:3000;
-    server localhost:3001;
-}
-```
+## Scaling and High Availability
 
-### 2. Database scaling
+### Horizontal Scaling
+
 ```yaml
-# Sử dụng PostgreSQL thay vì SQLite
+# docker-compose.yml for multiple backend instances
 services:
-  postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: hutech_consultation
-      POSTGRES_USER: hutech
-      POSTGRES_PASSWORD: your_password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
   backend:
+    deploy:
+      replicas: 3
     environment:
-      DATABASE_URL: postgresql://hutech:your_password@postgres:5432/hutech_consultation
+      - DATABASE_URL=postgresql://user:pass@postgres:5432/hutech_db
 ```
 
-## 🔄 Updates & Maintenance
+### Load Balancing
 
-### 1. Update application
+```nginx
+# nginx.conf for load balancing
+upstream backend {
+    server backend1:8000;
+    server backend2:8000;
+    server backend3:8000;
+}
+```
+
+### Database Migration
+
 ```bash
-# Pull latest code
-git pull origin main
+# Migrate to PostgreSQL
+docker run -d --name postgres \
+  -e POSTGRES_DB=hutech_consultation \
+  -e POSTGRES_USER=hutech \
+  -e POSTGRES_PASSWORD=your_password \
+  -p 5432:5432 postgres:13
 
-# Rebuild và restart
-docker-compose down
-docker-compose build --no-cache
-docker-compose up -d
+# Export SQLite data
+sqlite3 hutech_consultation.db .dump > data.sql
 
-# Update database nếu cần
-docker-compose exec backend python init_data.py
+# Import to PostgreSQL
+psql -h localhost -U hutech -d hutech_consultation < data.sql
 ```
 
-### 2. System updates
-```bash
-# Update system packages
-sudo apt update && sudo apt upgrade -y
+## Support and Maintenance
 
-# Update Docker
-sudo apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+### Regular Maintenance Tasks
 
-# Restart services
-sudo systemctl restart docker
-sudo systemctl restart hutech-consultation.service
-```
+1. **Weekly**
+   - Check application logs
+   - Verify backup completion
+   - Monitor resource usage
 
-### 3. Security updates
-```bash
-# Check for security updates
-sudo apt list --upgradable
+2. **Monthly**
+   - Update system packages
+   - Review security logs
+   - Test disaster recovery procedures
 
-# Update dependencies
-docker-compose exec backend pip install --upgrade -r requirements.txt
-docker-compose exec frontend npm update
-```
+3. **Quarterly**
+   - Update Docker images
+   - Review and rotate API keys
+   - Performance optimization review
 
----
+### Support Contacts
 
-**Lưu ý**: Luôn backup dữ liệu trước khi thực hiện updates hoặc thay đổi cấu hình!
+- **Technical Support**: tuyensinh@hutech.edu.vn
+- **Phone**: 028 5445 7777
+- **Documentation**: See README.md for detailed information
+
+### Emergency Procedures
+
+1. **Service Down**
+   ```bash
+   docker compose restart
+   docker compose logs -f
+   ```
+
+2. **Database Corruption**
+   ```bash
+   # Restore from backup
+   cp database/backup_YYYYMMDD.db database/hutech_consultation.db
+   docker compose restart backend
+   ```
+
+3. **High Resource Usage**
+   ```bash
+   # Check resource usage
+   docker stats
+   # Restart services if needed
+   docker compose restart
+   ```
