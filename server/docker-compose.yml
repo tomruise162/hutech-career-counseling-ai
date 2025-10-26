@@ -6,8 +6,6 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - DATABASE_URL=sqlite:///./hutech_consultation.db
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
-    volumes:
-      - ./database:/app
     command: uvicorn main:app --host 0.0.0.0 --port 8000
     expose:
       - "8000"
