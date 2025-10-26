@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import './ChatInterface.css';
 
-//const API_BASE_URL = 'http://localhost:8000';
+// const API_BASE_URL = 'http://localhost:8000';
 const API_BASE_URL = '/api';
 
 const ChatInterface = ({ studentInfo, onBack }) => {
@@ -175,8 +175,8 @@ const ChatInterface = ({ studentInfo, onBack }) => {
     <div className="chat-interface">
       <div className="chat-header">
         <div className="header-left">
-          <button className="back-btn" onClick={onBack}>
-            ← Quay lại
+          <button className="back-btn" onClick={onBack} title="Quay lại">
+            ◀️
           </button>
         </div>
         <div className="chat-title">
@@ -276,8 +276,8 @@ const ChatInterface = ({ studentInfo, onBack }) => {
           <div className="ended-message">
             <h3>Buổi tư vấn đã kết thúc</h3>
             <p>Cảm ơn bạn đã tham gia tư vấn hướng nghiệp với HuGo!</p>
-            <button className="back-btn" onClick={onBack}>
-              ← Quay lại trang chủ
+            <button className="back-btn" onClick={onBack} title="Quay lại trang chủ">
+              ◀
             </button>
           </div>
         </div>
